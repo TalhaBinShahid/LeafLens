@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+keras==3.10.0
+tensorflow==2.19.0
+pillow
+numpy
+python-dotenv
+requests
