@@ -33,7 +33,7 @@ app.add_middleware(
 
 
 # Load the pre-trained model
-MODEL_PATH = "model.h5"
+MODEL_PATH = "inception_plantvillage.h5"
 try:
     model = load_model(MODEL_PATH)
 except Exception as e:
