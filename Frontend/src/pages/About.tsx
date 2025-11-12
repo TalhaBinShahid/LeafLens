@@ -1,27 +1,29 @@
 import { Github, Linkedin, Mail, Leaf } from 'lucide-react';
+import talhaImage from '../images/talha.jpg';
+import noorImage from '../images/noorulhuda.jpg';
 
 export function About() {
   const team = [
     {
       name: 'Talha Bin Shahid',
       role: 'Lead AI Developer',
-      image: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?w=400&h=400&fit=crop',
+      image: talhaImage,
       bio: 'Expert in machine learning and deep learning models with 2+ years of experience in model development.',
       social: {
-        github: '#',
-        linkedin: '#',
+        github: 'https://github.com/TalhaBinShahid',
+        linkedin: 'https://www.linkedin.com/in/raja-talha/',
         email: 'talhabinshahid2004@outlook.com',
       },
     },
     {
       name: 'Noor ul Huda',
       role: 'Video editor',
-      image: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?w=400&h=400&fit=crop',
+      image: noorImage,
       bio: 'Full-stack developer specializing in React and FastAPI with a passion for building scalable applications.',
       social: {
-        github: '#',
-        linkedin: '#',
-        email: 'david@leaflens.com',
+        github: 'https://github.com/callmeNoorulHuda',
+        linkedin: 'https://www.linkedin.com/in/noor-ul-huda19',
+        email: 'noorulhuda33004@gmail.com',
       },
     },
     {
@@ -88,7 +90,7 @@ export function About() {
 
         <div className="mb-20">
           <h2 className="text-4xl font-bold mb-12">Meet the Team</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {team.map((member, index) => (
               <div
                 key={index}
