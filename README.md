@@ -141,7 +141,7 @@ npm run dev
 | ---------------------------- | ---------------------------- | ---------------------------- |
 | ![Detect1](docs/detect1.png) | ![Detect2](docs/detect2.png) | ![Detect3](docs/detect3.png) |
 
-> Replace placeholders with your actual screenshots.
+
 
 ---
 
