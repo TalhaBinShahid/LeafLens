@@ -1,4 +1,5 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException, BackgroundTasks
+from fastapi.middleware.cors import CORSMiddleware
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array
 from PIL import Image
@@ -14,8 +15,25 @@ load_dotenv()
 
 app = FastAPI()
 
+
+origins = [
+    "http://localhost:5173",  
+    "http://localhost:3000",  
+    os.getenv("FRONTEND_URL", "")
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,    
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+
 # Load the pre-trained model
-MODEL_PATH = "inception_plantvillage.h5"
+MODEL_PATH = "model.h5"
 try:
     model = load_model(MODEL_PATH)
 except Exception as e:
@@ -25,7 +43,7 @@ except Exception as e:
 TARGET_SIZE = (224, 224)
 
 # Define the class labels (replace with your actual class names)
-CLASS_NAMES = ['Apple___Apple_scab', 'Apple___Black_rot', 'Apple___Cedar_apple_rust', 'Apple___healthy', 'Blueberry___healthy', 'Cherry___healthy', 'Cherry___Powdery_mildew', 'Corn___Cercospora_leaf_spot Gray_leaf_spot', 'Corn___Common_rust', 'Corn___healthy', 'Corn___Northern_Leaf_Blight', 'Grape___Black_rot', 'Grape___Esca_(Black_Measles)', 'Grape___healthy', 'Grape___Leaf_blight_(Isariopsis_Leaf_Spot)', 'Orange___Haunglongbing_(Citrus_greening)', 'Peach___Bacterial_spot', 'Peach___healthy', 'Pepper,_bell___Bacterial_spot', 'Pepper,_bell___healthy', 'Potato___Early_blight', 'Potato___healthy', 'Potato___Late_blight', 'Raspberry___healthy', 'Soybean___healthy', 'Squash___Powdery_mildew', 'Strawberry___healthy', 'Strawberry___Leaf_scorch', 'Tomato___Bacterial_spot', 'Tomato___Early_blight', 'Tomato___healthy', 'Tomato___Late_blight', 'Tomato___Leaf_Mold', 'Tomato___Septoria_leaf_spot', 'Tomato___Spider_mites Two-spotted_spider_mite', 'Tomato___Target_Spot', 'Tomato___Tomato_mosaic_virus', 'Tomato___Tomato_Yellow_Leaf_Curl_Virus']
+CLASS_NAMES = ['Apple__Apple_scab', 'Apple_Black_rot', 'Apple_Cedar_apple_rust', 'Apple_healthy', 'Blueberry_healthy', 'Cherry_healthy', 'Cherry_Powdery_mildew', 'Corn_Cercospora_leaf_spot Gray_leaf_spot', 'Corn_Common_rust', 'Corn_healthy', 'Corn_Northern_Leaf_Blight', 'Grape_Black_rot', 'Grape_Esca(Black_Measles)', 'Grape__healthy', 'Grape_Leaf_blight(Isariopsis_Leaf_Spot)', 'Orange__Haunglongbing(Citrus_greening)', 'Peach__Bacterial_spot', 'Peach_healthy', 'Pepper,_bell_Bacterial_spot', 'Pepper,_bell_healthy', 'Potato_Early_blight', 'Potato_healthy', 'Potato_Late_blight', 'Raspberry_healthy', 'Soybean_healthy', 'Squash_Powdery_mildew', 'Strawberry_healthy', 'Strawberry_Leaf_scorch', 'Tomato_Bacterial_spot', 'Tomato_Early_blight', 'Tomato_healthy', 'Tomato_Late_blight', 'Tomato_Leaf_Mold', 'Tomato_Septoria_leaf_spot', 'Tomato_Spider_mites Two-spotted_spider_mite', 'Tomato_Target_Spot', 'Tomato_Tomato_mosaic_virus', 'Tomato__Tomato_Yellow_Leaf_Curl_Virus']
 
 # Load Google Gen AI API key from environment
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
@@ -43,7 +61,10 @@ async def predict_disease(file: UploadFile = File(...)):
     try:
         # Read the uploaded image file
         image = Image.open(file.file)
-        
+
+        if image.mode != "RGB":
+            image = image.convert("RGB")
+
         # Preprocess the image
         image = image.resize(TARGET_SIZE)
         image = img_to_array(image)
@@ -78,6 +99,8 @@ async def start_chat(request: StartChatRequest, background_tasks: BackgroundTask
                     f"You are a helpful assistant for farmers. "
                     f"A model predicts plant diseases from input images. "
                     f"Guide farmers based on their queries. Disease: {disease}."
+                    "Try to reply in short sentences since it is like a chatting application."
+                    "Avoid using symbols like ** or __ in your responses."
                 )
             }
         ],
@@ -131,7 +154,7 @@ async def chat(request: ChatRequest):
             assistant_message = gemini_response["candidates"][0]["content"]["parts"][0]["text"]
         except (KeyError, IndexError):
             assistant_message = "I'm sorry, I couldn't process that."
-
+        # assistant_message = "This is a placeholder response from Gemini API."
         # Add assistant's response to chat history
         chat_sessions[session_id]["history"].append({"role": "assistant", "content": assistant_message})
 
@@ -162,5 +185,3 @@ def cleanup_sessions():
     for sid in expired_sessions:
         print(f"Automatically Deleted Chat with SessionId: {sid}")
         del chat_sessions[sid]
-
-
