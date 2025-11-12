@@ -2,7 +2,20 @@
 
 LeafLens is a small full-stack app to help farmers identify plant diseases from images and get short, actionable guidance via a chat assistant powered by Google Generative AI (Gemini).
 
-This README gives a quick introduction, describes the project layout, explains the backend API (`backend/app.py`) and the frontend helper (`Frontend/src/lib/api.ts`), and shows how to get the project running locally.
+“This README provides an overview of the project, its structure, API details, and setup instructions for local development.”
+
+## Tech stack
+
+**Backend:** FastAPI, TensorFlow/Keras, Python  
+**Frontend:** React, TypeScript, Vite  
+**AI Integration:** Google Generative AI (Gemini)
+
+
+## Prerequisites
+
+- Python 3.10 or later
+- Node.js 18+ and npm
+- A valid Google Generative AI (Gemini) API key
 
 ## Key features
 
@@ -78,7 +91,7 @@ Type shapes provided by the client (matching backend responses):
 - `ChatResponse { response: string }`
 - `EndChatResponse { message: string }`
 
-Note: `api.ts` contains a console error message that mentions port `6000` for a failed fetch. The `API_BASE_URL` default is `127.0.0.1:5000`. If you see a port mismatch in the browser console, check the `API_BASE_URL` (or set `SERVER_URL`) and ensure the backend is launched on the same port.
+Note: If the browser console shows a fetch error on port 6000, check the backend’s running port. By default, the backend runs on 5000, while Vite runs on 5173. Update SERVER_URL in your .env.local file to ensure both match.
 
 ## Setup & run (development)
 
@@ -142,6 +155,8 @@ npm run dev
 
 - The app stores chat sessions in-memory — not persistent and not suitable for production scale.
 - The backend directly calls an external Gen AI API using an API key; do not commit secrets to the repo. For production use, protect the key and consider server-side rate limits, caching, and proper error handling.
+
+  
 
 ## Next steps / suggested improvements
 
