@@ -1,12 +1,12 @@
 # 🌿 **LeafLens**
 
-LeafLens is a small full-stack app that helps farmers identify **plant diseases** from images 🌱 and get **short, actionable guidance** through a chat assistant powered by **Google Generative AI (Gemini)** 🤖.
+LeafLens is a **full-stack app** that helps farmers identify **plant diseases** from images 🌱 and provides **short, actionable guidance** through a chat assistant powered by **Google Generative AI (Gemini)** 🤖.
 
-> “This README provides an overview of the project, its structure, API details, and setup instructions for local development.”
+> “This README provides a structured overview of the project, setup instructions, and screenshots for a quick visual understanding.”
 
 ---
 
-## 🧠 **Tech Stack**
+## 🧰 **Tech Stack Overview**
 
 | Layer              | Technology                        |
 | ------------------ | --------------------------------- |
@@ -16,35 +16,19 @@ LeafLens is a small full-stack app that helps farmers identify **plant diseases*
 
 ---
 
-## ⚙️ **Prerequisites**
+## ⚡ **Key Features**
 
-Before running the project, ensure you have:
-
-* 🐍 **Python** 3.10 or later
-* 💻 **Node.js** 18+ and **npm**
-* 🔑 A valid **Google Gemini API Key** (`GEMINI_API_KEY`)
-
----
-
-## 🌟 **Key Features**
-
-✨ Upload an image and receive a predicted disease label
-💬 Start a chat session for disease-specific guidance (powered by Gemini)
-🧩 Minimal frontend (Vite + React/TypeScript) showcasing image upload, prediction, and chat
+<div style="border:1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 8px;">
+<ul>
+<li>✨ Upload an image and receive a predicted disease label</li>
+<li>💬 Start a chat session for disease-specific guidance (powered by Gemini)</li>
+<li>🧩 Minimal frontend (Vite + React/TypeScript) showcasing image upload, prediction, and chat</li>
+</ul>
+</div>
 
 ---
 
-## 📖 **Quick Glossary / API Contract**
-
-| Feature              | Description                                                                                                         |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| **Predict endpoint** | Accepts an image file and returns `{ predicted_disease: string }`.                                                  |
-| **Chat session**     | Start with `{ disease }` → returns `session_id`; send messages `{ session_id, user_message }` → get `{ response }`. |
-| **Model**            | `backend/inception_plantvillage.h5` — Keras model for plant disease classification.                                 |
-
----
-
-## 🗂️ **Repository Structure**
+## 📂 **Repository Structure**
 
 ```
 LeafLens/
@@ -63,58 +47,26 @@ LeafLens/
 
 ---
 
-## 🧩 **Backend Overview (`backend/app.py`)**
+## 🧩 **Backend API Overview**
 
 ### 🔹 Endpoints
 
-#### 🧠 POST `/predict`
+| Endpoint      | Method | Description                                                                          |
+| ------------- | ------ | ------------------------------------------------------------------------------------ |
+| `/predict`    | POST   | Accepts an image and returns predicted disease label `{ predicted_disease: string }` |
+| `/start_chat` | POST   | Starts a chat session; returns `{ session_id, message }`                             |
+| `/chat`       | POST   | Sends a user message and receives Gemini response `{ response }`                     |
+| `/end_chat`   | POST   | Ends a chat session `{ message: "Chat session ended." }`                             |
 
-* Accepts an image, preprocesses it (224×224), runs the Keras model, and returns a label.
-  **Example response:**
+**Notes:**
 
-```json
-{ "predicted_disease": "Tomato_Early_blight" }
-```
-
-#### 💬 POST `/start_chat`
-
-* Starts a short-lived chat session.
-  **Example response:**
-
-```json
-{ "session_id": "...", "message": "Chat started for disease: ..." }
-```
-
-#### 📤 POST `/chat`
-
-* Sends a user message and gets a Gemini-generated response.
-  **Example response:**
-
-```json
-{ "response": "Short guidance or reply from Gemini" }
-```
-
-#### ❌ POST `/end_chat`
-
-* Ends and deletes a chat session.
-  **Example response:**
-
-```json
-{ "message": "Chat session ended." }
-```
-
-### ⚙️ Configuration Notes
-
-* Model file `inception_plantvillage.h5` **must exist** in `backend/`.
-* Environment variable `GEMINI_API_KEY` is **required**.
-* CORS is configured for:
-  `http://localhost:5173`, `http://localhost:3000`, and optional `FRONTEND_URL`.
+* `inception_plantvillage.h5` must exist in `backend/`
+* Set environment variable `GEMINI_API_KEY`
+* CORS configured for `http://localhost:5173`, `http://localhost:3000`, and optional `FRONTEND_URL`
 
 ---
 
-## 💻 **Frontend Usage – `Frontend/src/lib/api.ts`**
-
-Defines helper functions to call backend endpoints:
+## 💻 **Frontend API Helpers**
 
 | Function                                  | Description                    |
 | ----------------------------------------- | ------------------------------ |
@@ -123,37 +75,36 @@ Defines helper functions to call backend endpoints:
 | `sendChatMessage(sessionId, userMessage)` | Sends message → `/chat`        |
 | `endChatSession(sessionId)`               | Ends session → `/end_chat`     |
 
-**Default API base URL:**
-`http://127.0.0.1:5000` (can be overridden via `import.meta.env.SERVER_URL`)
+**Default API base URL:** `http://127.0.0.1:5000`
 
-⚠️ **Note:**
-If you see an error mentioning port `6000`, verify that both the backend and frontend are running on the correct ports (`5000` and `5173` respectively). Update `.env.local` if needed.
+> Can be overridden via `.env.local` → `import.meta.env.SERVER_URL`
 
 ---
 
 ## 🚀 **Setup & Run (Development)**
 
-### 🧩 1) Backend Setup (Windows PowerShell Example)
+### 1️⃣ Backend Setup (Windows PowerShell)
 
 ```powershell
-# 1. Create and activate a virtual environment
-python -m venv .venv; .\.venv\Scripts\Activate.ps1
+# Create and activate virtual environment
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
 
-# 2. Install dependencies
+# Install dependencies
 pip install -r backend/requirements.txt
 
-# 3. Check the model file
+# Check the model file
 dir backend\inception_plantvillage.h5
 
-# 4. Set the Gemini API Key
+# Set Gemini API Key
 setx GEMINI_API_KEY "<YOUR_GEMINI_API_KEY>"
 
-# 5. Run backend on port 5000
+# Run backend on port 5000
 cd backend
 uvicorn app:app --reload --port 5000
 ```
 
-### 🧠 2) Frontend Setup
+### 2️⃣ Frontend Setup
 
 ```powershell
 cd Frontend
@@ -162,77 +113,84 @@ npm run dev
 # Default: http://localhost:5173
 ```
 
-### 🌍 3) Run End-to-End
+### 3️⃣ End-to-End
 
-1. Open your browser at `http://localhost:5173`.
-2. Upload an image via the **Detect** page.
-3. View prediction and start a chat for disease guidance.
-
----
-
-## 🌿 **Screenshot / Demo**
-
-> *(Add your app screenshot or GIF demo here)*
-
-![App Screenshot Placeholder](docs/demo.png)
+1. Open `http://localhost:5173` in browser
+2. Upload an image on the **Detect** page
+3. View predictions and start a chat for guidance
 
 ---
 
-## 🧾 **Environment Configuration**
+## 🖼️ **Screenshots / Demo**
 
-| Component    | Variable                     | Description                                |
-| ------------ | ---------------------------- | ------------------------------------------ |
-| **Backend**  | `GEMINI_API_KEY`             | Required for Gemini chat                   |
-| **Backend**  | `FRONTEND_URL`               | (Optional) allowed CORS origin             |
-| **Frontend** | `import.meta.env.SERVER_URL` | Set in `.env.local` if backend URL differs |
+### 🏠 Landing / Home Page
 
----
+| Screenshot 1                   | Screenshot 2                   | Screenshot 3                   |
+| ------------------------------ | ------------------------------ | ------------------------------ |
+| ![Landing1](docs/landing1.png) | ![Landing2](docs/landing2.png) | ![Landing3](docs/landing3.png) |
 
-## 🧰 **Troubleshooting**
+### 📖 About Page
 
-⚠️ **Model load errors**
+| Screenshot 1               | Screenshot 2               | Screenshot 3               |
+| -------------------------- | -------------------------- | -------------------------- |
+| ![About1](docs/about1.png) | ![About2](docs/about2.png) | ![About3](docs/about3.png) |
 
-* Ensure `inception_plantvillage.h5` exists and is TensorFlow-compatible.
-* Check package versions in `backend/requirements.txt`.
+### 🖼️ Detection Page
 
-⚠️ **API key errors**
+| Screenshot 1                 | Screenshot 2                 | Screenshot 3                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| ![Detect1](docs/detect1.png) | ![Detect2](docs/detect2.png) | ![Detect3](docs/detect3.png) |
 
-* Set `GEMINI_API_KEY` in your environment or `.env`.
-
-⚠️ **CORS / Connection issues**
-
-* Confirm backend CORS setup matches frontend origin.
-* Ensure both services use the same base URL and port.
+> Replace placeholders with your actual screenshots.
 
 ---
 
-## 🔐 **Security & Production Notes**
+## 🔧 **Environment Variables**
 
-* Sessions are **in-memory** — not persisted.
-* Do **not** commit your API key or secrets to GitHub.
-* For production, add rate limiting, error handling, and request logging.
+| Component | Variable                     | Description                           |
+| --------- | ---------------------------- | ------------------------------------- |
+| Backend   | `GEMINI_API_KEY`             | Required for Gemini chat              |
+| Backend   | `FRONTEND_URL`               | Optional allowed CORS origin          |
+| Frontend  | `import.meta.env.SERVER_URL` | Backend URL if different from default |
 
 ---
 
-## 🚧 **Next Steps / Suggested Improvements**
+## ⚠️ Troubleshooting
+
+* **Model load errors** – Ensure `inception_plantvillage.h5` exists and TensorFlow version matches
+* **API key errors** – Set `GEMINI_API_KEY` in environment or `.env`
+* **CORS / Connection issues** – Match frontend origin with backend CORS, confirm ports
+
+---
+
+## 🔒 Security & Production Notes
+
+* Sessions are **in-memory**, not persisted
+* Do **not** commit API keys or secrets
+* For production: add rate-limiting, logging, and error handling
+
+---
+
+## 🚧 Next Steps / Improvements
 
 ✅ Store chat history in a database
-✅ Add unit and integration tests
+✅ Add unit & integration tests
 ✅ Add health/readiness endpoints
-✅ Improve error messages and unify ports
+✅ Improve error messages & unify ports
 
 ---
 
-## 🤝 **Contributing**
+## 🤝 Contributing
 
-Pull requests and issues are welcome!
-Please include relevant tests for new features and keep PRs focused.
+Pull requests and issues welcome! Include relevant tests and keep PRs focused.
+
+---
+
+## 📜 License
+
+No license file yet.
 
 ---
 
-## 📜 **License**
 
-This repository currently has **no license file**.
-
-
----
+Do you want me to do that next?
