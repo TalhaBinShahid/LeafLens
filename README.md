@@ -233,6 +233,6 @@ Please include relevant tests for new features and keep PRs focused.
 ## 📜 **License**
 
 This repository currently has **no license file**.
-Add one (e.g., MIT or Apache 2.0) if you plan to open-source it.
+
 
 ---
