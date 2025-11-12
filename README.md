@@ -160,9 +160,4 @@ This repository does not include a license file. Add a `LICENSE` file if you int
 
 ---
 
-If you'd like, I can also:
 
-- add a small `README` badge and run scripts to `package.json` to start both servers with a single command, or
-- add a short troubleshooting script that checks the model file and environment variables.
-
-Tell me which you'd prefer and I can implement it next.
